@@ -49,6 +49,10 @@ int LoadSettings(const char *szConfigFile)
 		// get max simulated fps
 		rakSAMPElement->QueryIntAttribute("maxfps", (int *)&settings.iMaxFPS);
 
+		// get ping amplification
+		rakSAMPElement->QueryIntAttribute("ping_amplification", (int *)&settings.iPingAmplification);
+		g_iPingAmplification = settings.iPingAmplification;
+
 		// get client version
 		strcpy(settings.szClientVersion, (char *)rakSAMPElement->Attribute("clientversion"));
 

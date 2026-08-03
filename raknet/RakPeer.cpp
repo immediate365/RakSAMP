@@ -1246,7 +1246,11 @@ bool RakPeer::RPC( int* uniqueID, const char *data, unsigned int bitLength, Pack
 		if (shiftTimestamp)
 		{
 			outgoingBitStream.Write((unsigned char) ID_TIMESTAMP);
+#ifdef RAKSAMP_CLIENT
+			outgoingBitStream.Write((RakNetTime)(RakNet::GetTime() - settings.iPingAmplification));
+#else
 			outgoingBitStream.Write(RakNet::GetTime());
+#endif
 		}
 
 		outgoingBitStream.Write((unsigned char) ID_RPC);

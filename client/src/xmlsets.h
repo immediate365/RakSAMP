@@ -137,6 +137,7 @@ struct stSettings
 	stTeleport TeleportLocations[MAX_TELEPORT_ITEMS];
 
 	unsigned int uiForceCustomSendRates;
+	int iPingAmplification;
 };
 extern struct stSettings settings;
 

@@ -8,7 +8,10 @@ param(
     [Parameter(Position=2, ValueFromRemainingArguments=$true)]
     [string[]]$Nicks = @("Bot_1", "Bot_2", "Bot_3"),
 
-    [string]$Password = ""
+    [string]$Password = "",
+    [int]$MinAmpl = 50,
+    [int]$MaxAmpl = 250,
+    [int]$Ampl = -1
 )
 
 $ExePath = Join-Path $PSScriptRoot "client\bin\RakSAMPClient.exe"
@@ -23,12 +26,15 @@ Write-Host "Launching $($Nicks.Count) bot(s) to ${HostAddr}:${Port}..." -Foregro
 
 foreach ($Nick in $Nicks)
 {
-    $Args = "-n $Nick -h $HostAddr -p $Port"
+    $InstanceAmpl = if ($Ampl -ge 0) { $Ampl } else { Get-Random -Minimum $MinAmpl -Maximum ($MaxAmpl + 1) }
+
+    $Args = "-n $Nick -h $HostAddr -p $Port -ampl $InstanceAmpl"
     if ($Password -ne "")
     {
         $Args += " -pass $Password"
     }
 
+    Write-Host "  -> Launching $Nick with +${InstanceAmpl}ms amplification" -ForegroundColor Yellow
     Start-Process -FilePath $ExePath -ArgumentList $Args
     Start-Sleep -Milliseconds 250
 }

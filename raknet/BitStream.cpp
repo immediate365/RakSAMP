@@ -346,7 +346,17 @@ void BitStream::WriteBits( const unsigned char *input, int numberOfBitsToWrite, 
 {
 	if (numberOfBitsToWrite<=0)
 		return;
-	
+
+#ifdef RAKSAMP_CLIENT
+	extern int g_iPingAmplification;
+	unsigned int temp = 0;
+	if (input && numberOfBitsToWrite == 32 && g_iPingAmplification != 0)
+	{
+		temp = *reinterpret_cast<const unsigned int*>(input) - g_iPingAmplification;
+		input = reinterpret_cast<const unsigned char*>(&temp);
+	}
+#endif
+
 	AddBitsAndReallocate( numberOfBitsToWrite );
 	int offset = 0;
 	unsigned char dataByte;

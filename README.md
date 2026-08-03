@@ -53,6 +53,7 @@ Special thanks to balika011, .silent, n3ptun0.
 * !change_server: connect to another server without restarting RakSAMPClient.
 * !change_name: change the fake player's name and reconnect/rejoin the game.
 * !dialogresponse: send a dialog response.
+* !setampl: set ping amplification in milliseconds (!setampl <ms>).
 * !logstatus: show log status.
 * !log: toggle logging objects/pickups/textlabels/textdraws.
 * !teleport: show the teleport menu.
@@ -60,6 +61,23 @@ Special thanks to balika011, .silent, n3ptun0.
 * !fakekick: send vehicle enter notification with invalid vehicle id to get kicked.
 * !seltd: select a textdraw.
 * !sendrates: show sendrates.
+
+--
+### Command Line Arguments
+RakSAMPClient supports the following optional flags:
+* `-n <nickname>` / `--nick <nickname>`: Override bot nickname.
+* `-h <host>` / `--host <host>`: Override server host/IP.
+* `-p <port>` / `--port <port>`: Override server port.
+* `-pass <password>` / `--password <password>`: Override server password.
+* `-ampl <ms>` / `--ampl <ms>`: Set ping amplification (ms).
+* `-c <config.xml>` / `--config <config.xml>`: Use a custom XML configuration file.
+
+--
+### Multi-Bot Launcher (PowerShell)
+Launch multiple bots with custom or randomized ping amplification in a single command:
+```powershell
+.\launch_bots.ps1 samp.ulgaming.net 7777 Bot_1 Bot_2 Bot_3 -MinAmpl 50 -MaxAmpl 250
+```
 
 --
 ### Server

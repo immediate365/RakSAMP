@@ -17,6 +17,7 @@ struct stVehiclePool vehiclePool[MAX_VEHICLES];
 FILE *flLog = NULL, *flTextDrawsLog = NULL;
 
 DWORD dwAutoRunTick = GetTickCount();
+int g_iPingAmplification = 0;
 
 extern int iMoney, iDrunkLevel, iLocalPlayerSkin;
 extern BOOL bIsSpectating;
@@ -67,6 +68,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			else if ((!strcmp(arg, "-pass") || !strcmp(arg, "--password")) && i + 1 < argc)
 			{
 				wcstombs(szOverridePass, argvW[++i], sizeof(szOverridePass));
+			}
+			else if ((!strcmp(arg, "-ampl") || !strcmp(arg, "--ampl")) && i + 1 < argc)
+			{
+				settings.iPingAmplification = _wtoi(argvW[++i]);
+				g_iPingAmplification = settings.iPingAmplification;
 			}
 		}
 		LocalFree(argvW);

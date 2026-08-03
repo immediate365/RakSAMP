@@ -69,6 +69,7 @@ extern char g_szNickName[32];
 
 extern struct stPlayerInfo playerInfo[MAX_PLAYERS];
 extern struct stVehiclePool vehiclePool[MAX_VEHICLES];
+extern int g_iPingAmplification;
 
 extern PLAYERID imitateID;
 

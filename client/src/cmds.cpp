@@ -630,6 +630,22 @@ int RunCommand(char *szCMD, int iFromAutorun)
 		return 1;
 	}
 
+	// SET PING AMPLIFICATION
+	if(!strncmp(szCMD, "setampl", 7) || !strncmp(szCMD, "SETAMPL", 7))
+	{
+		int iAmpl = 0;
+		if(sscanf(&szCMD[8], "%d", &iAmpl) < 1)
+		{
+			Log("USAGE: !setampl <milliseconds>");
+			return 1;
+		}
+
+		settings.iPingAmplification = iAmpl;
+		g_iPingAmplification = iAmpl;
+		Log("Ping amplification set to %d ms", iAmpl);
+		return 1;
+	}
+
 	// SHOW LOG STATUS
 	if(!strncmp(szCMD, "logstatus", 9) || !strncmp(szCMD, "LOGSTATUS", 9))
 	{
