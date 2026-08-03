@@ -1,0 +1,20 @@
+client/bin/RakSAMPClient.log
+
+# Build artifacts
+*.obj
+*.res
+*.lib
+*.exp
+*.tlog
+*.idb
+*.pdb
+*.pch
+*.lastbuildstate
+*.unsuccessfulbuild
+
+# Visual Studio files
+.vs/
+Backup/
+UpgradeLog*.htm
+client/src/obj/
+server/src/obj/

@@ -664,16 +664,26 @@ LRESULT CALLBACK SAMPDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					break;
 
 				case DIALOG_STYLE_LIST:
+				case DIALOG_STYLE_TABLIST:
+				case DIALOG_STYLE_TABLIST_HEADERS:
 					{
 						hwndListBox = CreateWindowEx(NULL, "LISTBOX", "",
 							WS_CHILD | WS_VISIBLE | LBS_NOTIFY | WS_VSCROLL | WS_BORDER | LBS_HASSTRINGS,
 							10, 10, 375, 225, hwnd, (HMENU)IDL_LISTBOX, hInst, NULL);
 
 						char *szInfoTemp = strtok(sampDialog.szInfo, "\n");
+						bool bSkipFirstHeader = (sampDialog.bDialogStyle == DIALOG_STYLE_TABLIST_HEADERS);
 						while(szInfoTemp != NULL)
 						{
-							int id = SendMessage(hwndListBox, LB_ADDSTRING, 0, (LPARAM)szInfoTemp);
-							SendMessage(hwndListBox, LB_SETITEMDATA, id, (LPARAM)id);
+							if (bSkipFirstHeader)
+							{
+								bSkipFirstHeader = false;
+							}
+							else
+							{
+								int id = SendMessage(hwndListBox, LB_ADDSTRING, 0, (LPARAM)szInfoTemp);
+								SendMessage(hwndListBox, LB_SETITEMDATA, id, (LPARAM)id);
+							}
 
 							szInfoTemp = strtok(NULL, "\n");
 						}
@@ -696,26 +706,28 @@ LRESULT CALLBACK SAMPDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			switch(LOWORD(wParam))
 			{
 				case IDB_BUTTON1:
-					if(sampDialog.bDialogStyle == DIALOG_STYLE_LIST)
+					if(sampDialog.bDialogStyle == DIALOG_STYLE_LIST ||
+					   sampDialog.bDialogStyle == DIALOG_STYLE_TABLIST ||
+					   sampDialog.bDialogStyle == DIALOG_STYLE_TABLIST_HEADERS)
 					{
 						wSelection = (WORD)SendMessage(hwndListBox, LB_GETCURSEL, 0, 0);
 						if(wSelection != (WORD)-1)
 						{
 							SendMessage(hwndListBox, LB_GETTEXT, wSelection, (LPARAM)szResponse);
-							sendDialogResponse(sampDialog.wDialogID, 1, 0, szResponse);
+							sendDialogResponse(sampDialog.wDialogID, 1, wSelection, szResponse);
 							PostQuitMessage(0);
 						}
 						break;
 					}
 
 					GetWindowText(hwndEditBox, szResponse, 257);
-					sendDialogResponse(sampDialog.wDialogID, 1, 0, szResponse);
+					sendDialogResponse(sampDialog.wDialogID, 1, (WORD)-1, szResponse);
 					PostQuitMessage(0);
 					break;
 
 				case IDB_BUTTON2:
 					GetWindowText(hwndEditBox, szResponse, 257);
-					sendDialogResponse(sampDialog.wDialogID, 0, 0, szResponse);
+					sendDialogResponse(sampDialog.wDialogID, 0, (WORD)-1, szResponse);
 					PostQuitMessage(0);
 					break;
 			}
@@ -847,6 +859,8 @@ void ScrDialogBox(RPCParameters *rpcParams)
 		case DIALOG_STYLE_INPUT:
 		case DIALOG_STYLE_LIST:
 		case DIALOG_STYLE_PASSWORD:
+		case DIALOG_STYLE_TABLIST:
+		case DIALOG_STYLE_TABLIST_HEADERS:
 			if(!sampDialog.iIsActive)
 			{
 				sampDialog.iIsActive = 1;

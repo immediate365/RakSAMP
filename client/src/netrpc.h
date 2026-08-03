@@ -36,6 +36,9 @@ struct stGTAMenu
 #define DIALOG_STYLE_INPUT		1
 #define DIALOG_STYLE_LIST		2
 #define DIALOG_STYLE_PASSWORD		3
+#define DIALOG_STYLE_TABLIST		4
+#define DIALOG_STYLE_TABLIST_HEADERS	5
+
 
 struct stSAMPDialog
 {
