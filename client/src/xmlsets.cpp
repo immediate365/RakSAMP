@@ -7,10 +7,10 @@
 struct stSettings settings;
 TiXmlDocument xmlSettings;
 
-int LoadSettings()
+int LoadSettings(const char *szConfigFile)
 {
 	// load xml
-	if(!xmlSettings.LoadFile("RakSAMPClient.xml"))
+	if(!xmlSettings.LoadFile(szConfigFile))
 	{
 		MessageBox(NULL, "Failed to load the config file", "Error", MB_ICONERROR);
 		ExitProcess(0);

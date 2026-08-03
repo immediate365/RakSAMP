@@ -140,6 +140,6 @@ struct stSettings
 };
 extern struct stSettings settings;
 
-int LoadSettings();
+int LoadSettings(const char *szConfigFile = "RakSAMPClient.xml");
 int UnLoadSettings();
 int ReloadSettings();

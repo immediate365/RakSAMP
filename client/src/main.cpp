@@ -25,13 +25,69 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 {
 	srand((unsigned int)GetTickCount());
 
+	char szModulePath[MAX_PATH];
+	GetModuleFileNameA(NULL, szModulePath, MAX_PATH);
+	char *pLastSlash = strrchr(szModulePath, '\\');
+	if (pLastSlash)
+	{
+		*pLastSlash = '\0';
+		SetCurrentDirectoryA(szModulePath);
+	}
+
+	char szConfigFile[256] = "RakSAMPClient.xml";
+	char szOverrideNick[32] = "";
+	char szOverrideAddr[256] = "";
+	int iOverridePort = 0;
+	char szOverridePass[32] = "";
+
+	int argc = 0;
+	LPWSTR *argvW = CommandLineToArgvW(GetCommandLineW(), &argc);
+	if (argvW)
+	{
+		for (int i = 1; i < argc; i++)
+		{
+			char arg[512];
+			wcstombs(arg, argvW[i], sizeof(arg));
+			if ((!strcmp(arg, "-c") || !strcmp(arg, "--config")) && i + 1 < argc)
+			{
+				wcstombs(szConfigFile, argvW[++i], sizeof(szConfigFile));
+			}
+			else if ((!strcmp(arg, "-n") || !strcmp(arg, "--nick")) && i + 1 < argc)
+			{
+				wcstombs(szOverrideNick, argvW[++i], sizeof(szOverrideNick));
+			}
+			else if ((!strcmp(arg, "-h") || !strcmp(arg, "--host")) && i + 1 < argc)
+			{
+				wcstombs(szOverrideAddr, argvW[++i], sizeof(szOverrideAddr));
+			}
+			else if ((!strcmp(arg, "-p") || !strcmp(arg, "--port")) && i + 1 < argc)
+			{
+				iOverridePort = _wtoi(argvW[++i]);
+			}
+			else if ((!strcmp(arg, "-pass") || !strcmp(arg, "--password")) && i + 1 < argc)
+			{
+				wcstombs(szOverridePass, argvW[++i], sizeof(szOverridePass));
+			}
+		}
+		LocalFree(argvW);
+	}
+
 	// load up settings
-	if(!LoadSettings())
+	if(!LoadSettings(szConfigFile))
 	{
 		Log("Failed to load settings");
 		getchar();
 		return 0;
 	}
+
+	if (szOverrideNick[0])
+		strncpy(settings.server.szNickname, szOverrideNick, sizeof(settings.server.szNickname) - 1);
+	if (szOverrideAddr[0])
+		strncpy(settings.server.szAddr, szOverrideAddr, sizeof(settings.server.szAddr) - 1);
+	if (iOverridePort > 0)
+		settings.server.iPort = iOverridePort;
+	if (szOverridePass[0])
+		strncpy(settings.server.szPassword, szOverridePass, sizeof(settings.server.szPassword) - 1);
 
 	if(settings.iConsole)
 		SetUpConsole();
